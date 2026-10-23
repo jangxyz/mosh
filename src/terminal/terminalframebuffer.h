@@ -417,6 +417,8 @@ private:
   title_type icon_name;
   title_type window_title;
   title_type clipboard;
+  title_type notification; /* body of the last OSC 9 or OSC 777, including its number */
+  unsigned int notification_count;
   unsigned int bell_count;
   bool title_initialized; /* true if the window title has been set via an OSC */
 
@@ -501,6 +503,13 @@ public:
   const title_type& get_icon_name( void ) const { return icon_name; }
   const title_type& get_window_title( void ) const { return window_title; }
   const title_type& get_clipboard( void ) const { return clipboard; }
+  void post_notification( const title_type& s )
+  {
+    notification = s;
+    notification_count++;
+  }
+  const title_type& get_notification( void ) const { return notification; }
+  unsigned int get_notification_count( void ) const { return notification_count; }
 
   void prefix_window_title( const title_type& s );
 
@@ -515,7 +524,7 @@ public:
   bool operator==( const Framebuffer& x ) const
   {
     return ( rows == x.rows ) && ( window_title == x.window_title ) && ( clipboard == x.clipboard )
-           && ( bell_count == x.bell_count ) && ( ds == x.ds );
+           && ( notification_count == x.notification_count ) && ( bell_count == x.bell_count ) && ( ds == x.ds );
   }
 };
 }

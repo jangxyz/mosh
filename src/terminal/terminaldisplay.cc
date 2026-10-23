@@ -112,6 +112,16 @@ std::string Display::new_frame( bool initialized, const Framebuffer& last, const
     frame.append( '\007' );
   }
 
+  /* has a desktop notification been posted? */
+  if ( f.get_notification_count() != frame.last_frame.get_notification_count() ) {
+    frame.append( "\033]" );
+    const title_type& notification( f.get_notification() );
+    for ( title_type::const_iterator i = notification.begin(); i != notification.end(); i++ ) {
+      frame.append( *i );
+    }
+    frame.append( '\007' );
+  }
+
   /* has reverse video state changed? */
   if ( ( !initialized ) || ( f.ds.reverse_video != frame.last_frame.ds.reverse_video ) ) {
     /* set reverse video */

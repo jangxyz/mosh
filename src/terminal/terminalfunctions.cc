@@ -631,6 +631,11 @@ void Dispatcher::OSC_dispatch( const Parser::OSC_End* act __attribute( ( unused 
        && OSC_string[3] == L'c' && OSC_string[4] == L';' ) {
     Terminal::Framebuffer::title_type clipboard( OSC_string.begin() + 5, OSC_string.end() );
     fb->set_clipboard( clipboard );
+    /* handle osc desktop notification sequences 9; and 777; */
+  } else if ( ( OSC_string.size() >= 2 && OSC_string[0] == L'9' && OSC_string[1] == L';' )
+              || ( OSC_string.size() >= 4 && OSC_string[0] == L'7' && OSC_string[1] == L'7' && OSC_string[2] == L'7'
+                   && OSC_string[3] == L';' ) ) {
+    fb->post_notification( Terminal::Framebuffer::title_type( OSC_string.begin(), OSC_string.end() ) );
     /* handle osc terminal title sequence */
   } else if ( OSC_string.size() >= 1 ) {
     long cmd_num = -1;
